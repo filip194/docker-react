@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build: #overriding Dockerfile selection
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app #mapping curent folder '.' outside the container to folder inside the container '/home/node/app'
+  tests:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app
+    command: ['npm', 'run', 'test'] #overriding default command
