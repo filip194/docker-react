@@ -1,0 +1,23 @@
+language: generic
+
+# root access needed
+sudo: required
+
+# programs needed to preinstall
+services:
+  - docker
+
+# commands/setup that we want to run before we start to deploy our project/run tests/whatever
+before_install:
+  - docker build -t docker194filip/docker-react -f Dockerfile.dev .
+
+# all commands needed to run out test suite
+# if we get any status code different than 0, travis will assume our code failed
+# because default test run in React doesn't finish but returns menu and hangs,
+# travis will never get a status code required, so we will run tests with coverage '-- --coverage'
+script:
+  # this option is for older versions of Create Recat App, without Jest
+  # - docker run docker194filip/docker-react npm run test -- --coverage
+  # newer versions use Jest, so command should be:
+  - docker run -e CI=true docker194filip/docker-react npm run test
+  # -e stands for 'environment' variables in Docker
