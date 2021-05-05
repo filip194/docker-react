@@ -21,3 +21,23 @@ script:
   # newer versions use Jest, so command should be:
   - docker run -e CI=true docker194filip/docker-react npm run test
   # -e stands for 'environment' variables in Docker
+
+deploy:
+  provider: elasticbeanstalk
+  # Dockerreact-env.eba-xpx6dgph.us-west-2.elasticbeanstalk.com
+  region: 'us-west-2'
+  app: 'docker-react'
+  env: 'Dockerreact-env'
+  # when travis decides to deploy a codebase, it's going to take all files inside github repository,
+  # it's going to zip them all up to a single file, and then it's goning to copy all of them over to S3 bucket
+  # S3 bucket is a hard drive on AWS, and it's going to notify elasticbeanstalk that it has the zip file to deploy
+  # so bucket_name is the name of the S3 bucket automatically created on AWS while creating application instance
+  # look it up on AWS -> Services -> S3 -> Buckets
+  bucket_name: 'elasticbeanstalk-us-west-2-093848024264'
+  # by default bucket_path should be the same as app name stated above
+  bucket_path: 'docker-react'
+  # every time we push code on master branch, deploy it on AWS
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
